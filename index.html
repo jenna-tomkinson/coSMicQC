@@ -1,0 +1,32 @@
+<!-- used for performing a redirect from root to main / latest version of docs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <script>
+        // Define the primary and fallback URLs
+        const primaryUrl = "https://wayscience.github.io/coSMicQC/main";
+        const fallbackUrl = "https://wayscience.github.io/coSMicQC/v0.1.1";
+
+        // Attempt to load the primary URL
+        fetch(primaryUrl, { method: 'HEAD' })
+            .then(response => {
+                if (response.ok) {
+                    // Redirect to the primary URL if it exists
+                    window.location.href = primaryUrl;
+                } else {
+                    // Redirect to the fallback URL if the primary URL is unavailable
+                    window.location.href = fallbackUrl;
+                }
+            })
+            .catch(() => {
+                // Redirect to the fallback URL if there's a network error or other issue
+                window.location.href = fallbackUrl;
+            });
+    </script>
+</head>
+<body>
+    <p>Redirecting... If you are not redirected automatically, try <a href="https://wayscience.github.io/coSMicQC/main">the main page</a> or the <a href="https://wayscience.github.io/coSMicQC/v0.1.1/index.html">backup page</a>.</p>
+</body>
+</html>
