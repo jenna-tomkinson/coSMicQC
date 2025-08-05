@@ -1,0 +1,41 @@
+name: dependabot jobs
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  pre-commit:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-24.04
+    steps:
+      # checks out the repo
+      - uses: actions/checkout@v4
+        with:
+          # fetch tags for versioning details
+          fetch-depth: 0
+      - name: Fetch tags
+        run: git fetch --all --tags
+      - name: Python setup
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Setup for poetry
+        run: |
+          python -m pip install poetry
+          poetry self add "poetry-dynamic-versioning[plugin]"
+      - name: Install environment
+        run: poetry install --no-interaction --no-ansi
+      # run pre-commit
+      - uses: pre-commit/action@v3.0.1
+        id: pre_commit
+      - name: Auto-commit any fixes
+        run: |
+            git config user.name 'github-actions[bot]'
+            git config user.email 'github-actions[bot]@users.noreply.github.com'
+            if [ -n "$(git status --porcelain)" ]; then
+                git commit -am "chore: apply pre-commit fixes"
+                git push --force-with-lease
+            else
+                echo "No changes to commit"
+            fi
