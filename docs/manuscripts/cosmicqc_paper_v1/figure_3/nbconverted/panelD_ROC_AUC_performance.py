@@ -57,7 +57,7 @@ le = load(
 
 # ## Load in no-QC model and dataset
 
-# In[ ]:
+# In[4]:
 
 
 # Load the trained model
@@ -99,7 +99,7 @@ y_probs_modelNoQC = no_QC_model.predict_proba(X)[:, 1]
 
 # ## Load in QC model and dataset
 
-# In[ ]:
+# In[5]:
 
 
 # Load the trained model
@@ -139,7 +139,7 @@ y_probs_modelQC = QC_model.predict_proba(X)[:, 1]
 
 # ## Calculate ROC AUC score by applying the model to their respective dataset
 #
-# e.g., QC model applyied on QC dataset and vice versa.
+# e.g., QC model applyied on QC heldout wells dataset and vice versa.
 
 # In[6]:
 
