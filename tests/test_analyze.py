@@ -547,6 +547,55 @@ def test_find_outliers_dict_and_default_config_cfret(
     )
 
 
+def test_find_outliers_does_not_set_threshold_display_options(
+    basic_outlier_dataframe: pd.DataFrame,
+):
+    """
+    Ensure find_outliers does not add threshold-line display options.
+    """
+
+    cdf = CytoDataFrame(
+        data=basic_outlier_dataframe.assign(Image_Metadata_Plate="A"),
+    )
+    cdf._custom_attrs["display_options"] = {"existing_setting": "keep"}
+    result = analyze.find_outliers(
+        df=cdf,
+        feature_thresholds={"example_feature": 1},
+        metadata_columns=["Image_Metadata_Plate"],
+    )
+    assert result._custom_attrs["display_options"]["existing_setting"] == "keep"
+    assert "filter_columns" not in result._custom_attrs["display_options"]
+    assert "filter_plot_thresholds" not in result._custom_attrs["display_options"]
+
+
+def test_find_outliers_retains_custom_attrs_with_dropna_path(
+    basic_outlier_dataframe: pd.DataFrame,
+):
+    """
+    Ensure find_outliers preserves context attrs after projection and dropna.
+    """
+
+    data = basic_outlier_dataframe.assign(
+        Image_Metadata_Plate="A",
+        example_feature_two=basic_outlier_dataframe["example_feature"],
+    )
+    data.loc[data["example_feature"] > 6, "example_feature"] = np.nan
+    cdf = CytoDataFrame(
+        data=data,
+        data_context_dir="example_context_dir",
+        data_mask_context_dir="example_mask_dir",
+    )
+
+    result = analyze.find_outliers(
+        df=cdf,
+        feature_thresholds={"example_feature": 1},
+        metadata_columns=["Image_Metadata_Plate"],
+    )
+
+    assert result._custom_attrs["data_context_dir"] == "example_context_dir"
+    assert result._custom_attrs["data_mask_context_dir"] == "example_mask_dir"
+
+
 def test_label_outliers(
     basic_outlier_dataframe: pd.DataFrame,
     basic_outlier_csv: str,
@@ -841,6 +890,46 @@ def test_label_outliers_retains_custom_attrs(basic_outlier_dataframe: pd.DataFra
     )
 
     assert isinstance(df, CytoDataFrame)
+
+
+def test_label_outliers_sets_filter_display_options_multiple_conditions(
+    basic_outlier_dataframe: pd.DataFrame,
+):
+    """
+    Ensure label_outliers adds filter display options from threshold sets.
+    """
+
+    cdf = CytoDataFrame(
+        data=basic_outlier_dataframe.assign(
+            example_feature_two=basic_outlier_dataframe["example_feature"]
+        ),
+    )
+    cdf._custom_attrs["display_options"] = {"existing_setting": "keep"}
+    result = analyze.label_outliers(
+        df=cdf,
+        feature_thresholds={
+            "oversegmented_cells": {"example_feature": 1},
+            "small_cells": {"example_feature_two": -1},
+        },
+    )
+
+    assert result._custom_attrs["display_options"]["existing_setting"] == "keep"
+    assert result._custom_attrs["display_options"]["filter_columns"] == [
+        "example_feature",
+        "example_feature_two",
+    ]
+    assert result._custom_attrs["display_options"]["filter_plot_thresholds"][
+        "example_feature"
+    ] == pytest.approx(
+        basic_outlier_dataframe["example_feature"].mean()
+        + basic_outlier_dataframe["example_feature"].std(ddof=0)
+    )
+    assert result._custom_attrs["display_options"]["filter_plot_thresholds"][
+        "example_feature_two"
+    ] == pytest.approx(
+        basic_outlier_dataframe["example_feature"].mean()
+        - basic_outlier_dataframe["example_feature"].std(ddof=0)
+    )
 
 
 def test_label_outliers_multiple_conditions(basic_outlier_dataframe: pd.DataFrame):
