@@ -530,6 +530,22 @@ comparison_df = pd.crosstab(
 
 print(comparison_df)
 
+# --- Failure rate (percentage) per QC method ---
+total_cells = len(idc_df)
+
+# coSMicQC failure rate
+cosmicqc_failed = (idc_df["cosmicqc_label"] == "failed_qc").sum()
+cosmicqc_failure_rate = (cosmicqc_failed / total_cells) * 100
+
+# ECOD failure rate (assumes ECOD_flag marks outliers/failures with a truthy value,
+# e.g. True/1 or "outlier" - adjust the comparison below to match your actual flag values)
+ecod_failed = idc_df["ECOD_flag"].astype(bool).sum()
+ecod_failure_rate = (ecod_failed / total_cells) * 100
+
+print(f"\nTotal cells: {total_cells}")
+print(f"coSMicQC failure rate: {cosmicqc_failed} / {total_cells} = {cosmicqc_failure_rate:.2f}%")
+print(f"ECOD failure rate: {ecod_failed} / {total_cells} = {ecod_failure_rate:.2f}%")
+
 
 # ## Step 7: Evaluate agreement between ECOD and coSMicQC on IDC plate
 
@@ -581,78 +597,7 @@ print(
 )
 
 
-# ## Step 8: Create Venn Diagram of cells that failed either or both QC methods
-
 # In[21]:
-
-
-import matplotlib.pyplot as plt
-from matplotlib_venn import venn2
-
-# -----------------------------
-# DEFINE MASKS
-# -----------------------------
-cosmic_fail = idc_df["cosmicqc_label"] == "failed_qc"
-ecod_fail = idc_df["ECOD_flag"] == 1
-
-cosmic_only = cosmic_fail & ~ecod_fail
-ecod_only = ecod_fail & ~cosmic_fail
-both = cosmic_fail & ecod_fail
-
-# -----------------------------
-# COUNTS
-# -----------------------------
-ecod_only_count = ecod_only.sum()
-cosmic_only_count = cosmic_only.sum()
-both_count = both.sum()
-
-# -----------------------------
-# PLOT
-# -----------------------------
-plt.figure(figsize=(6, 6))
-
-venn = venn2(
-    subsets=(ecod_only_count, cosmic_only_count, both_count),
-    set_labels=("PyOD ECOD", "coSMicQC"),
-    alpha=0.7
-)
-
-# -----------------------------
-# MANUALLY SET REGION COLORS
-# -----------------------------
-# ECOD only
-if venn.get_patch_by_id("10"):
-    venn.get_patch_by_id("10").set_color("#0072B2")  # blue
-
-# coSMicQC only
-if venn.get_patch_by_id("01"):
-    venn.get_patch_by_id("01").set_color("#CC79A7")  # green
-
-# overlap (both methods)
-if venn.get_patch_by_id("11"):
-    venn.get_patch_by_id("11").set_color("#D55E00")  # orange
-
-# -----------------------------
-# ADD COUNTS (override labels cleanly)
-# -----------------------------
-if venn.get_label_by_id("10"):
-    venn.get_label_by_id("10").set_text(ecod_only_count)
-
-if venn.get_label_by_id("01"):
-    venn.get_label_by_id("01").set_text(cosmic_only_count)
-
-if venn.get_label_by_id("11"):
-    venn.get_label_by_id("11").set_text(both_count)
-
-# -----------------------------
-# TITLE + STYLE
-# -----------------------------
-plt.tight_layout()
-plt.savefig("./figures/cosmicqc_ecod_venn_diagram.png", dpi=600)
-plt.show()
-
-
-# In[22]:
 
 
 # Create output directory
@@ -696,9 +641,9 @@ print(f"Failed both: {output_df['failed_both'].sum()}")
 output_df.head()
 
 
-# ## Step 9: Load in no QC feature select profiles and compute pairwise Pearson correlations between cells that failed each QC method or both
+# ## Step 8: Load in no QC feature select profiles and compute pairwise Pearson correlations between cells that failed each QC method or both
 
-# In[23]:
+# In[22]:
 
 
 # -----------------------------
@@ -748,7 +693,7 @@ print("ECOD flag distribution:")
 print(no_QC_df["ECOD_flag"].value_counts(dropna=False))
 
 
-# In[24]:
+# In[23]:
 
 
 # ---------------------------------
@@ -891,18 +836,23 @@ else:
 corr_mats = {"qc_subsample": corr_mat}
 
 
-# In[25]:
+# In[24]:
 
 
 # Count sampled cells per QC group (used for the correlation calculations)
 sampled_groups = pd.Series(cell_group_map).reindex(corr_mat.index)
-counts = sampled_groups.value_counts().reindex(["failed_both", "cosmic_only", "ecod_only"]).fillna(0).astype(int)
+counts = (
+    sampled_groups.value_counts()
+    .reindex(["failed_both", "cosmic_only", "ecod_only"])
+    .fillna(0)
+    .astype(int)
+)
 
 print("Sampled cells used for correlation (per group):")
 print(counts.to_string())
 
 
-# In[26]:
+# In[25]:
 
 
 # -----------------------------
