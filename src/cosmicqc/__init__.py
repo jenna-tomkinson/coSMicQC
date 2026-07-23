@@ -5,7 +5,7 @@ Initialization for cosmicqc package
 from importlib.metadata import PackageNotFoundError, version
 
 from .analyze import find_outliers, identify_outliers, label_outliers
-from .detection import ContaminationDetector
+from .detection import PerinuclearSignalDetector
 
 # version is derived from installed package metadata, which is populated at
 # build time by setuptools-scm from the project's git history.
