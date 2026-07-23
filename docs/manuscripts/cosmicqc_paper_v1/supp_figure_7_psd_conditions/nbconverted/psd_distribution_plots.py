@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Generate plots for features used in contamination detector
+# # Generate plots for features used in perinuclear signal detector
 
-# In[ ]:
+# In[1]:
 
 
 from pathlib import Path
@@ -25,6 +25,7 @@ from plotnine.options import set_option
 from sklearn.preprocessing import StandardScaler
 
 from cosmicqc import find_outliers
+
 
 # In[2]:
 
@@ -255,3 +256,4 @@ p.save(
 
 # Show plot
 p.show()
+
