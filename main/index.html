@@ -76,9 +76,9 @@
         <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/contamination_detector_in_action.html"><code class="docutils literal notranslate"><span class="pre">ContaminationDetector</span></code> in action</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/cosmicqc_in_a_nutshell.html"><code class="docutils literal notranslate"><span class="pre">coSMicQC</span></code> in a nutshell</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/jump_umap_analysis_with_cosmicqc.html">JUMP UMAP analysis with coSMicQC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/perinuclear_signal_detector_in_action.html"><code class="docutils literal notranslate"><span class="pre">PerinuclearSignalDetector</span></code> in action</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="presentations.html">Presentations</a><ul>
@@ -211,7 +211,7 @@ window.onload = setDefaultSelection;
 <a class="reference external" href="https://github.com/cytomining/coSMicQC/actions/workflows/run-tests.yml?query=branch%3Amain"><img alt="Build Status" src="https://github.com/cytomining/coSMicQC/actions/workflows/run-tests.yml/badge.svg?branch=main" /></a>
 <img alt="Coverage Status" src="https://raw.githubusercontent.com/cytomining/coSMicQC/main/media/coverage-badge.svg" />
 <a class="reference external" href="https://github.com/astral-sh/ruff"><img alt="Ruff" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json" /></a>
-<a class="reference external" href="https://python-poetry.org/"><img alt="Poetry" src="https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json" /></a>
+<a class="reference external" href="https://github.com/astral-sh/uv"><img alt="uv" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json" /></a>
 <a class="reference external" href="https://doi.org/10.1101/2025.10.14.682427"><img alt="Preprint DOI badge" src="https://img.shields.io/badge/Preprint_DOI-10.1101/2025.10.14.682427-blue" /></a>
 <a class="reference external" href="https://doi.org/10.5281/zenodo.14797008"><img alt="Software DOI badge" src="https://img.shields.io/badge/Software_DOI-10.5281/zenodo.14888111-blue" /></a></p>
 <blockquote>
@@ -282,8 +282,8 @@ By utilizing specific morphological features extracted with CellProfiler, you ca
 <section id="development-version-from-source">
 <h3>Development version (from source)<a class="headerlink" href="#development-version-from-source" title="Link to this heading">¶</a></h3>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/cytomining/coSMicQC.git
-<span class="c1"># or with poetry for local development</span>
-poetry<span class="w"> </span>install<span class="w"> </span>--with<span class="w"> </span>dev
+<span class="c1"># or with uv for local development</span>
+uv<span class="w"> </span>sync
 </pre></div>
 </div>
 </section>
@@ -322,7 +322,6 @@ poetry<span class="w"> </span>install<span class="w"> </span>--with<span class="
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/contamination_detector_in_action.html"><code class="docutils literal notranslate"><span class="pre">ContaminationDetector</span></code> in action</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/cosmicqc_in_a_nutshell.html"><code class="docutils literal notranslate"><span class="pre">coSMicQC</span></code> in a nutshell</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/jump_umap_analysis_with_cosmicqc.html">JUMP UMAP analysis with coSMicQC</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="examples/jump_umap_analysis_with_cosmicqc.html#outline">Outline</a></li>
@@ -332,6 +331,7 @@ poetry<span class="w"> </span>install<span class="w"> </span>--with<span class="
 <li class="toctree-l3"><a class="reference internal" href="examples/jump_umap_analysis_with_cosmicqc.html#prepare-data-for-analysis-with-pycytominer">Prepare data for analysis with pycytominer</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="examples/perinuclear_signal_detector_in_action.html"><code class="docutils literal notranslate"><span class="pre">PerinuclearSignalDetector</span></code> in action</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="presentations.html">Presentations</a><ul>
